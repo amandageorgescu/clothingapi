@@ -4,12 +4,10 @@ import flask
 import flask_sqlalchemy
 import hashlib
 import os
-import numpy
 import csv
 from flask import request, json
 from flask import render_template
 from flask import abort
-from numpy import genfromtxt
 from flask import abort
 
 app = flask.Flask(__name__)
