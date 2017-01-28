@@ -113,8 +113,7 @@ if __name__ == '__main__':
 	port = int(os.environ.get("PORT", 5000))
 	load_product_db()
 	load_inventory_db()
-	app.run()
-	#app.run(host='0.0.0.0', port=port)
+	app.run(host='0.0.0.0', port=port)
 
 
 
