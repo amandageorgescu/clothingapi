@@ -9,6 +9,7 @@ from flask import request, json
 from flask import render_template
 from flask import abort
 from flask import abort
+from flask import render_template
 
 app = flask.Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/bonobos.db'
@@ -46,14 +47,13 @@ class Inventory(db.Model):
 		self.count = count
 
 #Util
-#TODO: commas within description etc
 def load_product_db():
 	Product.query.delete()
 	products_file = open("products.csv")
-	csv_file = csv.reader(products_file)
+	csv_file = csv.reader(products_file, skipinitialspace=True)
 	csv_file.next()
 	for row in csv_file:
-		product = Product(int(row[0][1:-1]), row[1], row[2], row[3])
+		product = Product(int(row[0]), row[1], row[2], row[3].replace("\xe2\x80\x99","'"))
 		db.session.add(product)
 		db.session.commit()
 
@@ -77,36 +77,23 @@ def build_product_inventory_json(product):
 	product_json = load_json_from_product(product)
 	inventory_json = []
 	inventory = Inventory.query.filter(Inventory.product_id == product.product_id).all()
-	print(len(inventory))
 	for item in inventory:
 		item = load_json_from_inventory(item)
 		inventory_json.append(item)
 	return {"product":product_json,"inventory":inventory_json}
 
 #Routes
-@app.route('/products', methods = ['GET'])
+@app.route('/inventorybyproduct', methods = ['GET'])
 def api_products():
-	return get_all_products()
-
-@app.route('/products/<product_id>', methods = ['GET'])
-def api_products_with_id(product_id):
-	return get_specific_product(product_id)
+	return get_inventory_by_product()
 
 #Controller
-def get_all_products():
+def get_inventory_by_product():
 	all_products = Product.query.all()
-	products = []
+	all_products_json = []
 	for product in all_products:
-		products.append(build_product_inventory_json(product))
-	return json.dumps(products)
-
-def get_specific_product(product_id):
-	product = Product.query.filter(Product.product_id == product_id).first()
-	if product != None:
-		product = build_product_inventory_json(product)
-		return json.dumps(product)
-	else:
-		abort(404)
+		all_products_json.append(build_product_inventory_json(product))
+	return render_template('allinventory.html', products=all_products_json)
 
 if __name__ == '__main__':
 	db.create_all()
@@ -114,14 +101,6 @@ if __name__ == '__main__':
 	load_product_db()
 	load_inventory_db()
 	app.run(host='0.0.0.0', port=port)
-
-
-
-
-
-
-
-
 
 
 

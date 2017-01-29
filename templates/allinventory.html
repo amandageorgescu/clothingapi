@@ -1,0 +1,16 @@
+<html>
+<title>Bonobos Inventory</title>
+<b>Bonobos Inventory:</b>
+<ul>
+{% for product in products %}
+<p>product id: {{product.product.product_id}}</p>
+<p>product name: {{product.product.product_name}}</p>
+<p>product description: {{product.product.product_description}}</p>
+<p><img src={{product.product.product_image}}/></p>
+<p>Inventory available:</p>
+{% for item in product.inventory %}
+<li>Waist: {{item.waist}}, Length: {{item.length}}, Style: {{item.style}}, Count: {{item.count}}</li>
+{% endfor %}
+{% endfor %}
+</ul>
+</html>
