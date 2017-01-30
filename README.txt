@@ -1,6 +1,3 @@
-Full Stack Homework 
-Amanda Georgescu
-
 Build Instructions:  
 
 No need to build, application is built and running at https://still-meadow-35970.herokuapp.com.
