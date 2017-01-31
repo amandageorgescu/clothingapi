@@ -2,14 +2,11 @@
 
 import flask
 import flask_sqlalchemy
-import hashlib
 import os
 import csv
 from flask import request, json
 from flask import render_template
 from flask import abort
-from flask import abort
-from flask import render_template
 
 app = flask.Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/bonobos.db'
